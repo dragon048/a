@@ -5,51 +5,48 @@
 ExitProcess PROTO, dwExitCode: DWORD  ; Exit process prototype
 
 .data ; data segment
-	arrayA DWORD 2,2,3,1,7,5,0,8,9,2; initialise array A
-	arrayB DWORD 10 DUP (0) ; initialise empty array B
-	ArrayC DWORD 1,3,2,5,4,6,0,4,5,8 ; initialise array C
-	
+	arrayA DWORD 2,2,3,1,7,5,0,8,9,2
+	arrayB DWORD 10 DUP (0)
+	ArrayC DWORD 1,3,2,5,4,6,0,4,5,8
 
-	equationA DWORD 0
-	equationB DWORD 0
-	equationC DWORD 0
-
+	equation1 DWORD 0
+	equation2 DWORD 0
+	equation3 DWORD 0
 
 .code ; code segment
 
 main PROC ; main procedure
-	mov ebx, 2; load multiplier from c[i]*2 + 1
+	mov ebx, 2; load multiplier
 	mov ecx, 3; load divisor
-	mov esi, 0; load 0 as this will be used to increment in the loop
+	mov esi, 0
 
-myloop:
-	mov eax, [arrayA + TYPE arrayA * esi] ; take the nth element which is decided by the value of esi
+update:
+	mov eax, [arrayA + TYPE arrayA * esi]
 
 	add eax, 1
-	mov equationA, eax
+	mov equation1, eax
 
 	mov eax, [arrayC + TYPE arrayC * esi]
 	mul ebx ;C[i]*2
 	add eax, 1 ;C[i]*2 + 1
-	mov equationB, eax
+	mov equation2, eax
 
 	mov eax, [arrayA + TYPE arrayA * esi]
 	mov edx, [arrayC + TYPE arrayC * esi]
 	add eax, edx ; eax = A[i] + C[i] 
 
-
-	mov edx, 0; zero out for the division
+	mov edx, 0
 
 	div ecx; (A[i] + C[i]) / 3
 
-	add eax, equationA
-	add eax, equationB
+	add eax, equation1
+	add eax, equation2
 
 	mov [arrayB + TYPE arrayB * esi], eax
 
 	inc esi
 	cmp esi, 10
-	jne myloop
+	jne update
 
 	INVOKE ExitProcess, 0 ; call exit function
   
